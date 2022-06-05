@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <properties resource="db.properties"/>
+
+    <context id="default" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="com.wing.mybatis.plugins.ExampleTargetPlugin">
+            <property name="targetPackage" value="com.wing.mybatis.product.example"/>
+        </plugin>
+
+        <plugin type="com.wing.mybatis.plugins.LombokPlugin">
+            <property name="@AllArgsConstructor" value="true"/>
+            <property name="@NoArgsConstructor" value="true"/>
+            <property name="@Builder" value="true"/>
+        </plugin>
+
+        <plugin type="com.wing.mybatis.plugins.MapperAnnotationPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.ModelCloneablePlugin">
+            <property name="enableDeepClone" value="true"/>
+        </plugin>
+
+        <plugin type="com.wing.mybatis.plugins.ModelColumnPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.ExampleEnhancedPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.LimitPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.SelectWithColumnPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.InsertWithColumnPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.UpdateWithColumnPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.BatchInsertPlugin"/>
+
+        <plugin type="com.wing.mybatis.plugins.UpsertPlugin"/>
+
+        <commentGenerator type="com.wing.mybatis.comment.TemplateCommentGenerator">
+            <property name="suppressAllComments" value="false"/>
+            <property name="suppressDate" value="false"/>
+            <property name="addRemarkComments" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd hh:mm:ss"/>
+        </commentGenerator>
+
+        <!--jdbc的数据库连接 -->
+        <jdbcConnection driverClass="${driver}" connectionURL="${url}" userId="${username}" password="${password}"/>
+
+        <javaModelGenerator targetPackage="com.wing.mybatis.product.domain" targetProject="src/test/java"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/test/resources"/>
+        <javaClientGenerator targetPackage="com.wing.mybatis.product.mapper" targetProject="src/test/java" type="XMLMAPPER"/>
+
+        <table tableName="user">
+            <generatedKey column="id" sqlStatement="JDBC"/>
+            <columnRenamingRule searchString="address" replaceString="location"/>
+            <columnOverride column="status"
+                            javaType="com.wing.mybatis.sample.common.Status"
+                            typeHandler="com.wing.mybatis.sample.common.StatusTypeHandler"/>
+        </table>
+    </context>
+</generatorConfiguration>

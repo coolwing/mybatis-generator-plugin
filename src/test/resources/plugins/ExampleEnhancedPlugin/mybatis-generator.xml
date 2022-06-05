@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <properties resource="db.properties"/>
+
+    <!--导入属性配置 -->
+    <context id="default" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <!-- 插件 -->
+        <plugin type="com.wing.mybatis.plugins.ModelColumnPlugin"/>
+        <plugin type="com.wing.mybatis.plugins.ExampleEnhancedPlugin"/>
+
+        <!--jdbc的数据库连接 -->
+        <jdbcConnection driverClass="${driver}" connectionURL="${url}" userId="${username}" password="${password}"/>
+        <javaModelGenerator targetPackage="" targetProject=""/>
+        <sqlMapGenerator targetPackage="" targetProject=""/>
+        <javaClientGenerator targetPackage="" targetProject="" type="XMLMAPPER"/>
+
+        <table tableName="user" schema="test">
+            <generatedKey column="id" sqlStatement="JDBC"/>
+            <columnRenamingRule searchString="address" replaceString="location"/>
+            <columnOverride column="status"
+                            javaType="com.wing.mybatis.sample.common.Status"
+                            typeHandler="com.wing.mybatis.sample.common.StatusTypeHandler"/>
+        </table>
+
+    </context>
+</generatorConfiguration>
