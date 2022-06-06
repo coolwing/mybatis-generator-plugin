@@ -3,7 +3,7 @@
 
     <groupId>com.wing.mybatis</groupId>
     <artifactId>mybatis-generator-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>com.wing.mybatis:mybatis-generator-plugin</name>
@@ -29,7 +29,7 @@
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
             <version>1.3.7</version>
-<!--            <scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
         <!-- 日志 -->
         <dependency>
@@ -148,5 +148,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>mybatis-generator-plugin</name>
+            <url>https://maven.pkg.github.com/coolwing/mybatis-generator-plugin</url>
+        </repository>
+    </distributionManagement>
 
 </project>
