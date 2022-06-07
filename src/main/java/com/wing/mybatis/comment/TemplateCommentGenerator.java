@@ -2,6 +2,7 @@ package com.wing.mybatis.comment;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -52,7 +53,8 @@ import static com.wing.mybatis.comment.ParameterEnum.TABLE;
  **/
 public class TemplateCommentGenerator extends DefaultCommentGenerator {
     private static final String TEMPLATE_PATH_NAME = "templatePath";
-    private static final String DEFAULT_TEMPLATE_PATH = "src/main/resources/simplest-comment.ftl";
+    //private static final String DEFAULT_TEMPLATE_PATH = "com/wing/mybatis/comment/simplest-comment.ftl";
+    private static final String DEFAULT_TEMPLATE_NAME = "simplest-comment.ftl";
 
     private final Map<CommentNodeEnum, Template> templates = new HashMap<>();
 
@@ -64,19 +66,28 @@ public class TemplateCommentGenerator extends DefaultCommentGenerator {
         super.addConfigurationProperties(properties);
         this.suppressAllComments = StringUtility.isTrue(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_ALL_COMMENTS));
         this.addRemarkComments = StringUtility.isTrue(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_ADD_REMARK_COMMENTS));
-        String templatePath = (String)properties.getOrDefault(TEMPLATE_PATH_NAME, DEFAULT_TEMPLATE_PATH);
+        String templatePath = properties.getProperty(TEMPLATE_PATH_NAME);
         try {
-            File file = new File(templatePath);
-            if (file.exists()) {
-                Document doc = new SAXReader().read(file);
-                if (doc != null) {
-                    for (CommentNodeEnum node : CommentNodeEnum.values()) {
-                        Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
-                        Element element = doc.getRootElement().elementByID(node.value());
-                        if (element != null) {
-                            Template template = new Template(node.value(), element.getText(), cfg);
-                            templates.put(node, template);
-                        }
+            Document doc = null;
+            if (StringUtility.stringHasValue(templatePath)) {
+                File file = new File(templatePath);
+                if (file.exists()) {
+                    doc = new SAXReader().read(file);
+                }
+            } else {
+                ClassLoader classLoader = this.getClass().getClassLoader();
+                URL resource = classLoader.getResource(DEFAULT_TEMPLATE_NAME);
+                if (resource != null) {
+                    doc = new SAXReader().read(resource);
+                }
+            }
+            if (doc != null) {
+                Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
+                for (CommentNodeEnum node : CommentNodeEnum.values()) {
+                    Element element = doc.getRootElement().elementByID(node.value());
+                    if (element != null) {
+                        Template template = new Template(node.value(), element.getText(), cfg);
+                        templates.put(node, template);
                     }
                 }
             }
